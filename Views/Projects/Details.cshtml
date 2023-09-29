@@ -1,0 +1,189 @@
+﻿@model BugBurner.Models.Project
+@inject IBTFileService _BTFileService;
+@inject IBTProjectService _ProjectService;
+@inject UserManager<BTUser> _UserManager;
+@inject IBTNotificationService _notificationService;
+@inject IBTCompanyService _companyService;
+@inject IBTTicketService _ticketService;
+@{
+    ViewData["Title"] = "Details";
+    BTUser? bTUser = await _UserManager.GetUserAsync(User);
+    int companyId = bTUser.CompanyId;
+
+    BTUser? Pm = await _ProjectService.GetProjectManagerAsync(Model.Id);
+
+    List<BTUser> developers = await _ProjectService.GetProjectMembersByRoleAsync(Model.Id, "Developer", companyId);
+}
+
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+<div class="row pt-3 pb-3">
+    <div class="col-md-8">
+        <div class="card ms-3">
+            <div class="card-body task-detail">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        @if (Pm != null)
+                        {
+                            <h4 class="media-heading mt-0">@Pm.FullName</h4>
+                        }
+                        else
+                        {
+                            <h4 class="media-heading mt-0">No Project Manager</h4>
+                        }
+                        <span class="badge bg-danger">@Model.ProjectPriority!.Name</span>
+                    </div>
+                </div>
+                @*title*@
+                <h4>@Model.Name</h4>
+                @*description*@
+                <p class="text-muted">
+                    @Model.Description
+                </p>
+
+                <div class="row task-dates mb-0 mt-2">
+                    <div class="col-lg-6">
+                        <h5 class="font-600 m-b-5">Start Date</h5>
+                        <p> @Model.Created</p>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h5 class="font-600 m-b-5">Due Date</h5>
+                        <p> @Model.EndDate</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <hr />
+            </div>
+        </div>
+        @*Tickets Table*@
+        <h4>Tickets</h4>
+        <hr />
+       <div class="card">
+                <div class="card-body">
+                    @*tickets Table*@
+                    <h4 class="header-title mt-0 mb-3">Latest Tickets</h4>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="ticketTable">
+
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Start Date</th>
+                                    <th>Status</th>
+                                    <th>Developer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @foreach (Ticket ticket in Model.Tickets)
+                                    {
+                                        <tr>
+                                            <td>@ticket.Title</td>
+                                            <td>@ticket.Created</td>
+                                            @if (ticket.TicketPriority?.Name == "High")
+                                            {
+                                                <td><span class="badge bg-warning">@ticket.TicketPriority!.Name</span></td>
+
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Urgent")
+                                            {
+                                                <td><span class="badge bg-danger">@ticket.TicketPriority!.Name</span></td>
+
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Low")
+                                            {
+                                                <td><span class="badge bg-success">@ticket.TicketPriority!.Name</span></td>
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Medium")
+                                            {
+                                                <td><span class="badge bg-pink">@ticket.TicketPriority!.Name</span></td>
+                                            }
+
+                                            @if (ticket.DeveloperUser != null)
+                                            {
+                                                <td>@ticket.DeveloperUser!.FullName</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Unassigned</td>
+                                            }
+                                        </tr>
+                                    }                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5>Project Members</h5>
+                <hr />
+                <div class="assign-team mt-3">
+                    @if (User.IsInRole("ProjectManager") || User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-sm btn-success" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@Model.Id">Manage Members</a>
+                    }
+                    <div class="">
+                        @if (Pm != null)
+                        {
+                            <div class="card">
+                                <div class="card-body widget-user">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <h5 class="mt-0 mb-1">@Pm.FullName</h5>
+                                            <p class="text-muted mb-2 font-13 text-truncate">@Pm.Email</p>
+                                            <small class="text-primary"><b>Project Manager</b></small><br>
+                                            @if (User.IsInRole("ProjectManager") || User.IsInRole("Admin"))
+                                            {
+                                                <a class="btn btn-sm btn-primary" asp-action="AssignPm" asp-controller="Projects" asp-route-id="@Model.Id">Assign Pm</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @foreach (BTUser member in developers)
+                        {
+
+                            <div class="card">
+                                <div class="card-body widget-user">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <h5 class="mt-0 mb-1">@member.FullName</h5>
+                                            <p class="text-muted mb-2 font-13 text-truncate">@member.Email</p>
+                                            <small class="text-success"><b>Developer</b></small><br>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col -->
+    <!-- end row -->
+</div>
+<!-- end row -->
+<!-- ============================================================== -->
+<!-- End Page content -->
+<!-- ============================================================== -->
+@section Scripts{
+
+    <script>
+        $('#ticketTable').DataTable();
+    </script>
+    @* Morris Donut Chart *@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+
+}

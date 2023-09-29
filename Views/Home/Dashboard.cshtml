@@ -1,0 +1,497 @@
+﻿@model BugBurner.Models.Company
+@using Microsoft.AspNetCore.Identity;
+@inject IBTCompanyService _companyService;
+@inject IBTTicketService _ticketService;
+@inject IBTFileService _BTFileService;
+@inject IBTProjectService _ProjectService;
+@inject UserManager<BTUser> _UserManager;
+@inject IBTNotificationService _notificationService;
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    BTUser? bTUser = await _UserManager.GetUserAsync(User);
+    int companyId = Model.Id;
+    // start ticket data variables
+    IEnumerable<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId);
+
+    IEnumerable<Ticket> allTickets = await _ticketService.GetArchivedAndActiveTicketsByCompanyIdAsync(companyId);
+
+    IEnumerable<Ticket> lowTickets = tickets.Where(t => t.TicketPriority!.Name == "Low");
+
+    IEnumerable<Ticket> urgentTickets = tickets.Where(t => t.TicketPriority!.Name == "Urgent");
+
+    IEnumerable<Ticket> mediumTickets = tickets.Where(t => t.TicketPriority!.Name == "Medium");
+
+
+    IEnumerable<Ticket> highTickets = tickets.Where(t => t.TicketPriority!.Name == "High");
+
+    IEnumerable<Ticket> completedTickets = await _ticketService.GetArchivedTicketsByCompanyIdAsync(companyId);
+
+    double rawticketRatio = ((double)completedTickets.Count() / allTickets.Count()) * 100;
+    int ticketRatio = (int)Math.Round(rawticketRatio);
+
+    double rawUrgentRatio = ((double)urgentTickets.Count() / allTickets.Count()) * 100;
+    int urgentRatio = (int)Math.Round(rawUrgentRatio);
+    //end ticket data variables
+    //start project data variables
+    IEnumerable<Project> projects = await _ProjectService.GetActiveProjectsByCompanyIdAsync(companyId);
+
+    IEnumerable<Project> allProjects = await _ProjectService.GetAllProjectsByCompanyIdAsync(companyId);
+
+    IEnumerable<Project> completedProjects = await _ProjectService.GetArchivedProjectsByCompanyIdAsync(companyId);
+
+    double rawProjectRatio = ((double)completedProjects.Count() / allProjects.Count()) * 100;
+    int projectRatio = (int)Math.Round(rawProjectRatio);
+
+    double rawActiveProjects = ((double)projects.Count() / allProjects.Count()) * 100;
+    int activeRatio = (int)Math.Round(rawActiveProjects);
+
+    //end project data varaiables
+    //start company data variables
+    List<BTUser> allMembers = await _companyService.GetMembersAsync(companyId);
+
+    List<BTUser> developers = await _companyService.GetCompanyMembersByRoleAsync("Developer", companyId);
+
+    List<BTUser> managers = await _companyService.GetCompanyMembersByRoleAsync("ProjectManger", companyId);
+
+    List<BTUser> admins = await _companyService.GetCompanyMembersByRoleAsync("Admin", companyId);
+
+    //end company data variables
+
+}
+
+<!-- Start Content-->
+<div class="container-fluid pt-4">
+
+
+    <div class="row mt-6">
+        <h4>Stats</h4>
+        <hr />
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="header-title mt-0 mb-4">Active Tickets</h4>
+
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-end">
+                            <span class="badge bg-danger rounded-pill float-start mt-3">@urgentRatio % </span>
+                            <h4 class="fw-normal mb-1"> @urgentTickets.Count() Urgent Tickets </h4>
+                            <p class="text-muted mb-3"> of @tickets.Count() </p>
+                        </div>
+                        <div class="progress progress-bar-alt-danger progress-sm">
+                            <div class="progress-bar bg-danger" role="progressbar"
+                                 aria-valuenow="@completedTickets.Count()" aria-valuemin="0" aria-valuemax="@tickets.Count()"
+                                 style="width:@ticketRatio%">
+                                <span class="visually-hidden">@ticketRatio Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="header-title mt-0 mb-3">Completed Tickets</h4>
+
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-end">
+                            <span class="badge bg-success rounded-pill float-start mt-3">@ticketRatio % </span>
+                            <h2 class="fw-normal mb-1"> @completedTickets.Count() </h2>
+                            <p class="text-muted mb-3">of @allTickets.Count() completed to date </p>
+                        </div>
+                        <div class="progress progress-bar-alt-success progress-sm">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 aria-valuenow="@completedTickets.Count()" aria-valuemin="0" aria-valuemax="@tickets.Count()"
+                                 style="width:@ticketRatio%">
+                                <span class="visually-hidden">@ticketRatio Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="header-title mt-0 mb-4">Active Projects</h4>
+
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-end">
+                            <span class="badge bg-primary rounded-pill float-start mt-3">@activeRatio % </span>
+                            <h4 class="fw-normal mb-1"> @projects.Count() active Projects </h4>
+                            <p class="text-muted mb-3">of @allProjects.Count() </p>
+                        </div>
+                        <div class="progress progress-bar-alt-primary progress-sm">
+                            <div class="progress-bar bg-primary" role="progressbar"
+                                 aria-valuenow="@projects.Count()" aria-valuemin="0" aria-valuemax="@allProjects.Count()"
+                                 style="width:@activeRatio%">
+                                <span class="visually-hidden">@activeRatio % Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="header-title mt-0 mb-3">Completed Projects</h4>
+
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-end">
+                            <span class="badge bg-pink rounded-pill float-start mt-3">@projectRatio%  </span>
+                            <h2 class="fw-normal mb-1"> @completedProjects.Count() </h2>
+                            <p class="text-muted mb-3">of @allProjects.Count() Projects completed</p>
+                        </div>
+                        <div class="progress progress-bar-alt-pink progress-sm">
+                            <div class="progress-bar bg-pink" role="progressbar"
+                                 aria-valuenow="@projectRatio" aria-valuemin="0" aria-valuemax="@projects.Count()"
+                                 style="width: @projectRatio%;">
+                                <span class="visually-hidden">@projectRatio% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end col -->
+
+    </div>
+    <!-- end row -->
+    @*Two Pie charts*@
+    <div class="row text-center d-flex justify-content-center">
+        <div class="col-xl-5">
+            <div class="card">
+
+                <div class="card-body">
+                    <a asp-action="Index" asp-controller="Tickets">
+                        <h5>Tickets by Priority</h5>
+                    </a>
+                    <!-- Morris: Donut -->
+                    <div class="col-md-12">
+                        <div class="chart chart-md" id="morrisTicketPriority"></div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-5">
+            <div class="card">
+
+                <div class="card-body">
+                    <a asp-action="Index" asp-controller="Projects">
+                        <h5>Tickets by Project</h5>
+                    </a>
+                    <!-- Morris: Donut -->
+                    <div class="col-md-12">
+                        <div class="chart chart-md" id="morrisTicketsByProject"></div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+    </div>
+    <!-- end row -->
+
+
+    <h4>Management</h4>
+    <hr />
+    <div class="row d-flex justify-content-center">
+        @foreach (BTUser member in managers)
+        {
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body widget-user">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h5 class="mt-0 mb-1">@member.FullName</h5>
+                                <p class="text-muted mb-2 font-13 text-truncate">@member.Email</p>
+                                <small class="text-warning"><b>Manager</b></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- end col -->
+        @foreach (BTUser member in admins)
+        {
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body widget-user">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h5 class="mt-0 mb-1">@member.FullName</h5>
+                                <p class="text-muted mb-2 font-13 text-truncate">@member.Email</p>
+                                <small class="text-pink"><b>Admin</b></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- end col -->
+        }
+    </div>
+    <!-- end row -->
+
+    <h4>Notfications</h4>
+    <hr />
+    <div class="row d-flex justify-content-center">
+        @*Notifications Table*@
+        <div class="col-xl-5">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="header-title mb-3">Inbox</h4>
+
+                    <div class="inbox-widget">
+                        @foreach (Notification notification in await _notificationService.GetNotificationsByUserIdAsync(bTUser.Id))
+                        {
+                            if (notification.HasBeenViewed == false)
+                            {
+                                <div class="inbox-item">
+                                    <a href="#">
+                                        <h5 class="inbox-item-author mt-0 mb-1">From: @notification.Sender.FullName</h5>
+                                        <p class="inbox-item-text">@notification.Message</p>
+                                        <a asp-action="Delete" asp-controller="Notifications">
+                                            <p class="inbox-item-date">Mark Read</p>
+                                        </a><br />
+                                        <p class="text-muted">@notification.Created</p>
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end col -->
+        @*Team Table*@
+        <div class="col-xl-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-3">Team</h4>
+
+                    <div class="inbox-widget">
+                        @foreach (BTUser member in developers)
+                        {
+                            <div class="inbox-item">
+                                <a href="#">
+                                    <h5 class="inbox-item-author mt-0 mb-1">@member.FullName</h5>
+                                    <p class="inbox-item-text text-success ">Developer </p>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end col -->
+    </div>
+
+    <h4>Tickets</h4>
+    <hr />
+    <div class="row pb-3">
+
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    @*tickets Table*@
+                    <h4 class="header-title mt-0 mb-3">Latest Tickets</h4>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="ticketTable">
+
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Start Date</th>
+                                    <th>Status</th>
+                                    <th>Developer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    @foreach (Ticket ticket in await _ticketService.GetAllTicketsByCompanyIdAsync(companyId))
+                                    {
+                                        <tr>
+                                            <td>@ticket.Title</td>
+                                            <td>@ticket.Created</td>
+                                            @if (ticket.TicketPriority?.Name == "High")
+                                            {
+                                                <td><span class="badge bg-warning">@ticket.TicketPriority!.Name</span></td>
+
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Urgent")
+                                            {
+                                                <td><span class="badge bg-danger">@ticket.TicketPriority!.Name</span></td>
+
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Low")
+                                            {
+                                                <td><span class="badge bg-success">@ticket.TicketPriority!.Name</span></td>
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Medium")
+                                            {
+                                                <td><span class="badge bg-pink">@ticket.TicketPriority!.Name</span></td>
+                                            }
+
+                                            @if (ticket.DeveloperUser != null)
+                                            {
+                                                <td>@ticket.DeveloperUser!.FullName</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Unassigned</td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (Ticket ticket in await _ticketService.GetTicketsByUserIdAsync(bTUser.Id, companyId))
+                                    {
+                                        <tr>
+                                            <td>@ticket.Title</td>
+                                            <td>@ticket.Created</td>
+                                            @if (ticket.TicketPriority?.Name == "High")
+                                            {
+                                                <td><span class="badge bg-warning">@ticket.TicketPriority!.Name</span></td>
+
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Urgent")
+                                            {
+                                                <td><span class="badge bg-danger">@ticket.TicketPriority!.Name</span></td>
+
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Low")
+                                            {
+                                                <td><span class="badge bg-success">@ticket.TicketPriority!.Name</span></td>
+                                            }
+                                            else if (ticket.TicketPriority?.Name == "Medium")
+                                            {
+                                                <td><span class="badge bg-pink">@ticket.TicketPriority!.Name</span></td>
+                                            }
+
+                                            @if (ticket.DeveloperUser != null)
+                                            {
+                                                <td>@ticket.DeveloperUser!.FullName</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Unassigned</td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end col -->
+
+    </div>
+    <!-- end row -->
+
+</div> <!-- container-fluid -->
+<!-- END wrapper -->
+@section Scripts{
+
+    <script>
+        $('#ticketTable').DataTable();
+    </script>
+    @* Morris Donut Chart *@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script>
+
+        var morrisDonutData = [{
+            label: "Low",
+            value: @lowTickets.Count()
+                                                    }, {
+            label: "Medium",
+            value: @mediumTickets.Count()
+                                                    }, {
+            label: "High",
+            value: @highTickets.Count()
+                                                    }, {
+            label: "Urgent",
+            value: @urgentTickets.Count()
+                                                    }];
+
+
+        /*
+        Morris: Donut
+        */
+        if ($('#morrisTicketPriority').get(0)) {
+            var donutChart = Morris.Donut({
+                resize: true,
+                element: 'morrisTicketPriority',
+                data: morrisDonutData,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b', '#0066aa', '#563188', '#bf463f', '#e68121', '#669900', '#006699']
+            });
+
+            donutChart.options.data.forEach(function (label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#legend').append(legendItem)
+            });
+        };
+    </script>
+    @*tickets by project chart*@
+    <script>
+        var morrisDonutData2 = [
+            // Use JavaScript to generate the data
+        @foreach (Project project in projects)
+        {
+            <text>{
+                    label: '@project.Name',
+                    value: @project.Tickets.Count()
+                                                                                        }, </text>
+        }
+                                                        ];
+
+        /*
+        Morris: Donut
+        */
+        if ($('#morrisTicketsByProject').get(0)) {
+            var donutChart2 = Morris.Donut({
+                resize: true,
+                element: 'morrisTicketsByProject',
+                data: morrisDonutData2,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b', '#0066aa', '#563188', '#bf463f', '#e68121', '#669900', '#006699']
+            });
+
+            donutChart2.options.data.forEach(function (label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart2.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#legend').append(legendItem);
+            });
+        }
+    </script>
+
+}

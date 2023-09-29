@@ -1,0 +1,389 @@
+﻿@model IEnumerable<Project>;
+@inject IBTFileService _BTFileService;
+@inject IBTProjectService _projectService;
+@inject UserManager<BTUser> _UserManager;
+@{
+    BTUser? bTUser = await _UserManager.GetUserAsync(User);
+    int companyId = bTUser!.CompanyId;
+    ViewData["Title"] = "Index";
+}
+
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+@if (User.IsInRole("Admin"))
+{
+    <div class="row pt-3 pb-3">
+        <div class="col-xl-10">
+            <div class="card">
+                <div class="card-body taskboard-box">
+                    <h4 class="header-title mt-0 mb-3 text-success">Completed and Active Projects</h4>
+
+                    <ul class="sortable-list list-unstyled taskList" id="completed">
+                        @foreach (Project project in await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                        {
+                            @if (project.Archived == false)
+                            {
+                                <li>
+                                    <div class="kanban-box">
+                                        <div class="kanban-detail">
+                                            @if (project.ProjectPriority!.Name == "High")
+                                            {
+                                                <span class="badge bg-warning float-end">@project.ProjectPriority.Name</span>
+                                            }
+                                            else if (project.ProjectPriority!.Name == "Urgent")
+                                            {
+                                                <span class="badge bg-danger float-end">@project.ProjectPriority.Name</span>
+                                            }
+                                            else if (project.ProjectPriority!.Name == "Low")
+                                            {
+                                                <span class="badge bg-success float-end">@project.ProjectPriority.Name</span>
+                                            }
+                                            else if (project.ProjectPriority!.Name == "Medium")
+                                            {
+                                                <span class="badge bg-pink float-end">@project.ProjectPriority.Name</span>
+                                            }
+
+                                            <h5 class="mt-0 mb-2">
+                                                <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" class="text-dark">
+                                                    @project.Name
+                                                </a>
+                                            </h5>
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                       title="Description">
+                                                        <p class="text-muted">@project.Description</p>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                       title="Created Date">
+                                                        <p class="text-muted">@project.Created</p>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a asp-action="ArchiveProject" asp-controller="Projects" asp-route-id="@project.Id"                                                       
+                                                       class="btn btn-primary btn-sm">
+                                                        Archive
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a asp-action="Edit" asp-controller="Projects" asp-route-id="@project.Id"
+                                                       class="btn btn-secondary btn-sm">
+                                                        Edit
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <div class="kanban-box">
+                                        <div class="kanban-detail">
+                                            <span class="badge bg-success float-end">Complete</span>
+                                            <h5 class="mt-0">
+                                                <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" class="text-dark">
+                                                    @project.Name
+                                                </a>
+                                            </h5>
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                       title="Description">
+                                                        <p class="text-muted">@project.Description</p>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                       title="Created Date">
+                                                        <p class="text-muted">@project.Created</p>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a asp-action="UndoArchiveProject" asp-controller="Projects" asp-route-id="@project.Id"
+                                                       title="Created Date"
+                                                       class="btn btn-warning btn-sm">
+                                                        Undo Archive
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+
+                        }
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end col -->
+}
+else
+{
+    <div class="row pt-3 pb-3">
+
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body taskboard-box">
+
+                    <h4 class="header-title mt-0 mb-3 text-warning">My Projects</h4>
+
+                    <ul class="sortable-list list-unstyled taskList" id="inprogress">
+
+                        @foreach (Project project in bTUser.Projects)
+                        {
+
+                            <li>
+                                <div class="kanban-box">
+
+                                    <div class="kanban-detail">
+                                        @if (project.ProjectPriority!.Name == "High")
+                                        {
+                                            <span class="badge bg-warning float-end">@project.ProjectPriority.Name</span>
+                                        }
+                                        else if (project.ProjectPriority!.Name == "Urgent")
+                                        {
+                                            <span class="badge bg-danger float-end">@project.ProjectPriority.Name</span>
+                                        }
+                                        else if (project.ProjectPriority!.Name == "Low")
+                                        {
+                                            <span class="badge bg-success float-end">@project.ProjectPriority.Name</span>
+                                        }
+                                        else if (project.ProjectPriority!.Name == "Medium")
+                                        {
+                                            <span class="badge bg-pink float-end">@project.ProjectPriority.Name</span>
+                                        }
+                                        <h5 class="mt-0">
+                                            <a href="task-details.html" class="text-dark">
+                                                File
+                                                Uploads on cards
+                                            </a>
+                                        </h5>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                   title="Description">
+                                                    <p class="text-muted">@project.Description</p>
+                                                </a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                   title="Created Date">
+                                                    <p class="text-muted">@project.Created</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    @if (User.IsInRole("ProjectManager"))
+                    {
+                        <div class="text-center pt-2">
+                            <a asp-action="Create" asp-controller="Projects"
+                               class="btn btn-primary waves-effect waves-light">
+                                <i class="mdi mdi-plus"></i> Add New
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (User.IsInRole("ProjectManager"))
+        {
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body taskboard-box">
+                        <h4 class="header-title mt-0 mb-3 text-success">Completed and Active Projects</h4>
+
+                        <ul class="sortable-list list-unstyled taskList" id="completed">
+                            @foreach (Project project in await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                            {
+                                @if (project.Archived == false)
+                                {
+                                    <li>
+                                        <div class="kanban-box">
+                                            <div class="kanban-detail">
+                                                @if (project.ProjectPriority!.Name == "High")
+                                                {
+                                                    <span class="badge bg-warning float-end">@project.ProjectPriority.Name</span>
+                                                }
+                                                else if (project.ProjectPriority!.Name == "Urgent")
+                                                {
+                                                    <span class="badge bg-danger float-end">@project.ProjectPriority.Name</span>
+                                                }
+                                                else if (project.ProjectPriority!.Name == "Low")
+                                                {
+                                                    <span class="badge bg-success float-end">@project.ProjectPriority.Name</span>
+                                                }
+                                                else if (project.ProjectPriority!.Name == "Medium")
+                                                {
+                                                    <span class="badge bg-pink float-end">@project.ProjectPriority.Name</span>
+                                                }
+
+                                                <h5 class="mt-0 mb-2">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" class="text-dark">
+                                                        @project.Name
+                                                    </a>
+                                                </h5>
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="Description">
+                                                            <p class="text-muted">@project.Description</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="Created Date">
+                                                            <p class="text-muted">@project.Created</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="ArchiveProject" asp-controller="Projects" asp-route-id="@project.Id"
+                                                           title="Created Date"
+                                                           class="btn btn-primary btn-sm">
+                                                            Archive
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Edit" asp-controller="Projects" asp-route-id="@project.Id"
+                                                           class="btn btn-secondary btn-sm">
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <div class="kanban-box">
+                                            <div class="kanban-detail">
+                                                <span class="badge bg-success float-end">Complete</span>
+                                                <h5 class="mt-0">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" class="text-dark">
+                                                        @project.Name
+                                                    </a>
+                                                </h5>
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="Description">
+                                                            <p class="text-muted">@project.Description</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="Created Date">
+                                                            <p class="text-muted">@project.Created</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="UndoArchiveProject" asp-controller="Projects" asp-route-id="@project.Id"                                                           
+                                                           class="btn btn-warning btn-sm">
+                                                            Undo Archive
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body taskboard-box">
+                        <h4 class="header-title mt-0 mb-3 text-success">All Projects</h4>
+
+                        <ul class="sortable-list list-unstyled taskList" id="completed">
+                            @foreach (Project project in await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                            {
+                                @if (project.Archived == false)
+                                {
+                                    <li>
+                                        <div class="kanban-box">
+                                            <div class="kanban-detail">
+                                                @if (project.ProjectPriority!.Name == "High")
+                                                {
+                                                    <span class="badge bg-warning float-end">@project.ProjectPriority.Name</span>
+                                                }
+                                                else if (project.ProjectPriority!.Name == "Urgent")
+                                                {
+                                                    <span class="badge bg-danger float-end">@project.ProjectPriority.Name</span>
+                                                }
+                                                else if (project.ProjectPriority!.Name == "Low")
+                                                {
+                                                    <span class="badge bg-success float-end">@project.ProjectPriority.Name</span>
+                                                }
+                                                else if (project.ProjectPriority!.Name == "Medium")
+                                                {
+                                                    <span class="badge bg-pink float-end">@project.ProjectPriority.Name</span>
+                                                }
+
+                                                <h5 class="mt-0 mb-2">
+                                                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" class="text-dark">
+                                                        @project.Name
+                                                    </a>
+                                                </h5>
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="Description">
+                                                            <p class="text-muted">@project.Description</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="Created Date">
+                                                            <p class="text-muted">@project.Created</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }                               
+
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- end col -->
+        }
+
+    </div>
+
+    <!-- end row -->
+}
+
+<!-- ============================================================== -->
+<!-- End Page content -->
+<!-- ============================================================== -->

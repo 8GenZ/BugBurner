@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Ticket>;
+@inject IBTCompanyService _companyService;
+@inject IBTTicketService _ticketService;
+@inject IBTFileService _BTFileService;
+@inject IBTProjectService _ProjectService;
+@inject UserManager<BTUser> _UserManager;
+@inject IBTNotificationService _notificationService;
+
+@{
+    ViewData["Title"] = "Index";
+    BTUser? bTUser = await _UserManager.GetUserAsync(User);
+}
+
+<h4>Tickets</h4>
+<hr />
+<div class="row pb-2">
+    <div class="col-3">
+        <a class="btn btn-primary" asp-action="Create" asp-controller="Tickets">
+            Create New Ticket
+        </a>
+        <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Tickets">
+            Back
+        </a>
+    </div>
+
+
+</div>
+
+<div class="row pb-3">
+
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                @*tickets Table*@
+                <h4 class="header-title mt-0 mb-3">Latest Tickets</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="ticketTable">
+
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Start Date</th>
+                                <th>Status</th>
+                                <th>Developer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Ticket ticket in Model)
+                            {
+                                <tr>
+                                    <td> <a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id">@ticket.Title </a></td>
+                                    <td>@ticket.Created</td>
+                                    @if (ticket.TicketPriority?.Name == "High")
+                                    {
+                                        <td><span class="badge bg-warning">@ticket.TicketPriority!.Name</span></td>
+
+                                    }
+                                    else if (ticket.TicketPriority?.Name == "Urgent")
+                                    {
+                                        <td><span class="badge bg-danger">@ticket.TicketPriority!.Name</span></td>
+
+                                    }
+                                    else if (ticket.TicketPriority?.Name == "Low")
+                                    {
+                                        <td><span class="badge bg-success">@ticket.TicketPriority!.Name</span></td>
+                                    }
+                                    else if (ticket.TicketPriority?.Name == "Medium")
+                                    {
+                                        <td><span class="badge bg-pink">@ticket.TicketPriority!.Name</span></td>
+                                    }
+
+                                    @if (ticket.DeveloperUser != null)
+                                    {
+                                        <td>@ticket.DeveloperUser!.FullName</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger"><a text-danger asp-action="AssignTicket" asp-controller="Tickets" asp-route-id="@ticket.Id ">Unassigned</a></td>
+                                    }
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col -->
+
+</div>
+
+
+
+@section scripts{
+    <script>
+        $('#ticketTable').DataTable();
+    </script>
+}

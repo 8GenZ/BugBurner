@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugBurner", "BugBurner.csproj", "{8D8A22A7-92AF-43B2-AE4E-F4BF90BE13BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D8A22A7-92AF-43B2-AE4E-F4BF90BE13BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D8A22A7-92AF-43B2-AE4E-F4BF90BE13BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D8A22A7-92AF-43B2-AE4E-F4BF90BE13BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D8A22A7-92AF-43B2-AE4E-F4BF90BE13BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0125A649-2DEE-442C-8261-D08B206D5F5B}
+	EndGlobalSection
+EndGlobal
