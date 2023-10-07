@@ -14,7 +14,7 @@ WORKDIR "/src/."
 RUN dotnet build "BugBurner.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BugBurner.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BugBurner.csproj" -c Release -o /app/publish /p:UseAppHost=true
 
 FROM base AS final
 WORKDIR /app
