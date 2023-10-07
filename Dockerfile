@@ -5,6 +5,21 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+# Add Node.js installation step
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY ["BugBurner/BugBurner.csproj", "BugBurner/"]
+RUN dotnet restore "./BugBurner/BugBurner.csproj"
+
+# Install Node.js and npm/yarn
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs
+
+# Continue with the remaining build steps
+COPY . .
+WORKDIR "/src/BugBurner"
+RUN dotnet build "BugBurner.csproj" -c Release -o /app/build
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["BugBurner.csproj", "."]
