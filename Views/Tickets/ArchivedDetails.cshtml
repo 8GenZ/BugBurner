@@ -4,27 +4,6 @@
 @inject IBTProjectService _ProjectService;
 @{
     ViewData["Title"] = "Details";
-    BTUser? bTUser = await _UserManager.GetUserAsync(User);
-    BTUser? Pm = await _ProjectService.GetProjectManagerAsync(Model.Project!.Id);
-    bool userIsDeveloper;
-    if (bTUser!.Id == Model.DeveloperUserId)
-    {
-        userIsDeveloper = true;
-    }
-    else
-    {
-        userIsDeveloper = false;
-    }
-    bool userIsPm;
-    if (bTUser.Id == Pm.Id)
-    {
-        userIsPm = true;
-    }
-    else
-    {
-        userIsPm = false;
-    }
-
 }
 <div class="row pt-3 pb-2">
     <div class="col-sm-7">
@@ -34,23 +13,17 @@
                     <div class="flex-grow-1 overflow-hidden">
                         <h4 class="m-0">@Model.Title</h4>
                         <p class="text-muted"><i>@Model.TicketPriority!.Name</i></p>
-                        @if (User.IsInRole("Admin") || userIsPm == true || userIsDeveloper == true)
+                        @if(Model.DeveloperUser == null)
                         {
-                            <a class="btn btn-sm btn-outline-blue mb-2" asp-action="Edit" asp-controller="Tickets" asp-route-id="@Model.Id">Edit Ticket</a>
+                        <p class="text-muted"><i>No Project Manger Assigned</i></p>
                         }
-
-
-
                         <p class="text-muted"><i>@Model.DeveloperUser!.FullName</i></p>
                         <p class="font-13">@Model.Description</p>
-                        @if (User.IsInRole("Admin") || userIsPm == true || userIsDeveloper == true)
-                        {
-                            <a class="btn btn-sm btn-outline-blue" asp-action="ArchiveTicket" asp-controller="Tickets" asp-route-id="@Model.Id">Mark Complete</a>
-
-                            <br />
+                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                        {                           
                             @if (Model.Archived == true && Model.ArchivedByProject == false)
                             {
-                                <a class="btn btn-sm btn-outline-blue" asp-action="UndoTicket" asp-controller="Tickets" asp-route-id="@Model.Id">Undo Archive</a>
+                                <a class="btn btn-sm btn-outline-blue" asp-action="UndoArchive" asp-controller="Tickets" asp-route-id="@Model.Id">Undo Archive</a>
                             }
                         }
                     </div>
@@ -62,32 +35,6 @@
 
         <h4>Comment</h4>
         <hr />
-        @if (User.IsInRole("Admin") || userIsPm == true || userIsDeveloper == true)
-        {
-            <div class="card">
-                <form asp-action="Create" asp-controller="TicketComments" class="card-body">
-                    <span class="input-icon icon-end">
-
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="Id" name="TicketId" />
-                        <div class="row row-md-10">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="editor">Leave a Comment</label>
-                                    <textarea id="editor" class="form-control" name="Comment"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pt-1 float-end form-submit">
-                            <input name="submit" type="submit" id="submit" class="btn btn-primary btn-sm waves-effect waves-light" value="Comment" />
-
-                        </div>
-
-                    </span>
-                </form>
-            </div>
-        }
 
         <h4>Ticket Comments</h4>
 
@@ -106,28 +53,10 @@
         </div>
     </div>
 
-    <div class="col-sm-5">
-        @if (User.IsInRole("Admin") || userIsPm == true || userIsDeveloper == true)
-        {
+    <div class="col-sm-5">               
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title mt-0 mb-3"><i class="mdi mdi-notification-clear-all me-1"></i>Ticket Attachments</h4>
-                    <div>
-                        <form asp-action="AddTicketAttachment" asp-controller="Tickets" enctype="multipart/form-data" method="post">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <input type="hidden" asp-for="@Model.Id" name="TicketId">
-                            <div class="media-body ml-3">
-                                <label>
-                                    Description
-                                    <input name="Description" type="text" class="form-control" />
-                                </label><br />
-                                <label class="btn btn-outline-primary btn-sm mt-2">
-                                    <input name="FormFile" type="file" class="form-control-file" />
-                                </label>
-                                <button type="submit" class="btn btn-outline-success btn-sm md-btn-flat mt-2">Submit</button>
-                            </div>
-                        </form>
-                    </div>
                     <ul class="list-group mb-0 user-list">
                         @foreach (TicketAttachment attachment in Model.Attachments)
                         {
@@ -147,8 +76,7 @@
                         }
                     </ul>
                 </div>
-            </div>
-        }
+            </div>        
         <div class="card">
             <div class="card-body">
                 <div class="dropdown float-end">

@@ -1,106 +1,76 @@
 ﻿@model IEnumerable<BugBurner.Models.Ticket>
-
+@inject IBTTicketService _TicketService;
+@inject UserManager<BTUser> _UserManager;
 @{
     ViewData["Title"] = "Archived Tickets";
+    BTUser? bTUser = await _UserManager.GetUserAsync(User);
+    int companyId = bTUser.CompanyId;
+
+    
 }
 
-<h1>Archived Tickets</h1>
+<h4>Archived Tickets</h4>
+<hr />
+<div class="row pb-3">
 
-<p>
-    <a asp-action="Index">Back</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArchivedByProject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketPriority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeveloperUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubmitterUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Updated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Archived)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ArchivedByProject)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Project.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SubmitterUser.FullName)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    @{
-                        if(item.ArchivedByProject == false)
-                        {
-                            <a asp-action="UndoArchive" asp-route-id="@item.Id">Undo Archive</a>                            
-                        }
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                @*tickets Table*@
+                <h4 class="header-title mt-0 mb-3">Latest Tickets</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="ticketTable">
+
+                        <thead>
+                            <tr>
+                                <th>Ticket Name</th>
+                                <th>Start Date</th>
+                                <th>Developer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Ticket ticket in Model)
+                            {
+                                <tr>
+                                    <td> <a asp-action="ArchivedDetails" asp-controller="Tickets" asp-route-id="@ticket.Id">@ticket.Title </a></td>
+                                    <td>@ticket.Created</td>
+                                    @if (ticket.TicketPriority?.Name == "High")
+                                    {
+                                        <td><span class="badge bg-warning">@ticket.TicketPriority!.Name</span></td>
+
+                                    }
+                                    else if (ticket.TicketPriority?.Name == "Urgent")
+                                    {
+                                        <td><span class="badge bg-danger">@ticket.TicketPriority!.Name</span></td>
+
+                                    }
+                                    else if (ticket.TicketPriority?.Name == "Low")
+                                    {
+                                        <td><span class="badge bg-success">@ticket.TicketPriority!.Name</span></td>
+                                    }
+                                    else if (ticket.TicketPriority?.Name == "Medium")
+                                    {
+                                        <td><span class="badge bg-pink">@ticket.TicketPriority!.Name</span></td>
+                                    }
+
+                                    @if (ticket.DeveloperUser != null)
+                                    {
+                                        <td>@ticket.DeveloperUser!.FullName</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger"><a text-danger asp-action="AssignTicket" asp-controller="Tickets" asp-route-id="@ticket.Id ">Unassigned</a></td>
+                                    }
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col -->
+
+</div>

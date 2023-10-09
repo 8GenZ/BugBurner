@@ -10,6 +10,8 @@ namespace BugBurner.Services.Interfaces
 
 		public Task<Ticket> GetTicketByIdAsync(int? ticketId, int? companyId);
 
+        public Task<Ticket> GetArchivedTicketByIdAsync(int? ticketId, int? companyId);
+
         public Task AddTicketAsync(Ticket? ticket);
         public Task AssignTicketAsync(int? ticketId, string? userId);
        

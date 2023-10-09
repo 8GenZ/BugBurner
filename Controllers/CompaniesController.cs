@@ -11,6 +11,7 @@ using BugBurner.Services.Interfaces;
 using BugBurner.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using BugBurner.Services;
 
 namespace BugBurner.Controllers
 {
@@ -35,12 +36,13 @@ namespace BugBurner.Controllers
         // GET: Companies
         public async Task<IActionResult> Index()
         {
-              return _context.Companies != null ? 
-                          View(await _context.Companies.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Companies'  is null.");
+            Company company = await _btCompanyService.GetCompanyInfoAsync(_companyId);
+
+            return View(company);
         }
 
         // GET: Companies/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Companies == null)
@@ -48,7 +50,7 @@ namespace BugBurner.Controllers
                 return NotFound();
             }
 
-            Company company = await _btCompanyService.GetCompanyInfoAsync(id);
+            Company company = await _btCompanyService.GetCompanyInfoAsync(_companyId);
 
             if (company == null)
             {

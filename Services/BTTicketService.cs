@@ -58,6 +58,38 @@ namespace BugBurner.Services
                     ticket = await _context.Tickets
                                             .Where(t => t.Project!.CompanyId == companyId && t.Project.Archived == false)
                                             .Include(t => t.Project)
+                                                .ThenInclude(p => p!.Company)                                            
+                                            .Include(t => t.Attachments)
+                                            .Include(t => t.Comments)
+                                            .Include(t => t.DeveloperUser)
+                                            .Include(t => t.History)
+                                            .Include(t => t.SubmitterUser)
+                                            .Include(t => t.TicketPriority)
+                                            .Include(t => t.TicketStatus)
+                                            .Include(t => t.TicketType)
+                                            .FirstOrDefaultAsync(t => t.Id == ticketId);
+
+                }
+                return ticket!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<Ticket> GetArchivedTicketByIdAsync(int? ticketId, int? companyId)
+        {
+            try
+            {
+                Ticket? ticket = new();
+
+                if (ticketId != null && companyId != null)
+                {
+                    ticket = await _context.Tickets
+                                            .Where(t => t.Project!.CompanyId == companyId)
+                                            .Include(t => t.Project)
                                                 .ThenInclude(p => p!.Company)
                                             .Include(t => t.Attachments)
                                             .Include(t => t.Comments)

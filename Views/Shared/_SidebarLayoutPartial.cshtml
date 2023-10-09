@@ -71,7 +71,7 @@
                 <li>
                     <a asp-action="Dashboard" asp-controller="Home">
                         <i class="mdi mdi-view-dashboard-outline"></i>
-                        <span class="badge bg-success rounded-pill float-end">9+</span>
+                        <span class="badge bg-success rounded-pill float-end">+ @_notificationService.GetNotificationsByUserIdAsync(bTUser.Id).Result.Count()</span>
                         <span> Dashboard </span>
                     </a>
                 </li>
@@ -79,7 +79,7 @@
 
 
                 <li>
-                    <a asp-action="Details" asp-controller="Company">
+                    <a asp-action="Index" asp-controller="Companies" >
                         <i class="mdi mdi-calendar-blank-outline"></i>
                         <span> Company </span>
                     </a>
@@ -98,9 +98,6 @@
                             <li>
                                 <a asp-action="Create" asp-controller="Projects">Create Project</a>
                             </li>                                
-                            <li>
-                                <a asp-action="ProjectHistories" asp-controller="Projects">Archived Projects</a>
-                            </li>
                             }
                             <li>
                                 <a asp-action="Index" asp-controller="Projects">View Projects</a>
@@ -124,9 +121,12 @@
                             <li>
                                 <a asp-action="Index" asp-controller="Tickets">View Project Tickets</a>
                             </li>
+                            @if(User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                            {
                             <li>
                                 <a asp-action="ArchivedTickets" asp-controller="Tickets">View Archived Tickets</a>
-                            </li>
+                            </li>                                
+                            }
                         </ul>
                     </div>
                 </li>

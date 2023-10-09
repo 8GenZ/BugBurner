@@ -95,7 +95,7 @@ namespace BugBurner.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Tickets", new {id = ticket.Id.ToString()});
             }
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", ticket.ProjectId);
@@ -111,7 +111,7 @@ namespace BugBurner.Controllers
             return View(ticket);
         }
 
-        [Authorize(Roles ="ProjectManager")]
+        [Authorize]
         public async Task<IActionResult> ArchivedTickets()
         {
             IEnumerable<Ticket> tickets = await _ticketService.GetArchivedTicketsByCompanyIdAsync(_companyId);
@@ -179,8 +179,26 @@ namespace BugBurner.Controllers
             return View(ticket);
         }
 
+        // GET: Archived/Tickets/Details/5
+        public async Task<IActionResult> ArchivedDetails(int? id)
+        {
+            if (id == null || _context.Tickets == null)
+            {
+                return NotFound();
+            }
+
+            Ticket ticket = await _ticketService.GetArchivedTicketByIdAsync(id, _companyId);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return View(ticket);
+        }
+
         // GET: Tickets/Create
-        
+
         public IActionResult Create()
         {
 
