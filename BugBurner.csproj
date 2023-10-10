@@ -7,6 +7,7 @@
     <UserSecretsId>aspnet-BugBurner-0ee3ae3d-2678-4d74-9143-a6eec2652370</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+	  <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
 
   <ItemGroup>
