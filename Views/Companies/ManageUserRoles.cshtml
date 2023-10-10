@@ -1,10 +1,16 @@
 ﻿@model IEnumerable<ManageUserRolesViewModel>;
+@inject UserManager<BTUser> _UserManager;
 
-<div class="row">
+@{
+    BTUser? bTUser = await _UserManager.GetUserAsync(User);
+}
+
+<div class="row pb-4 mt-2">
     <h2 class="m-t-0 h3"><b>Manage Member Roles </b></h2>
     @foreach (var viewModel in Model)
     {
-        <div class="row">
+        @if (viewModel.BTUser!.CompanyId == bTUser!.CompanyId)
+        {
             <div class="card col-4 m-3">
                 <div class="card-body">
                     <p class="text-muted font-13 m-b-30">
@@ -31,6 +37,6 @@
                     </form>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>
