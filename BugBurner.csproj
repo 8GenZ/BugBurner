@@ -12,15 +12,13 @@
 
   <ItemGroup>
     <Compile Remove="wwwroot\assets\libs\pdfmake\**" />
+    <Compile Remove="wwwroot\assets\libs\treeview\**" />
     <Content Remove="wwwroot\assets\libs\pdfmake\**" />
+    <Content Remove="wwwroot\assets\libs\treeview\**" />
     <EmbeddedResource Remove="wwwroot\assets\libs\pdfmake\**" />
+    <EmbeddedResource Remove="wwwroot\assets\libs\treeview\**" />
     <None Remove="wwwroot\assets\libs\pdfmake\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="wwwroot\assets\libs\treeview\node_modules\jquery\AUTHORS.txt" />
-    <Content Include="wwwroot\assets\libs\treeview\node_modules\jquery\external\sizzle\LICENSE.txt" />
-    <Content Include="wwwroot\assets\libs\treeview\node_modules\jquery\LICENSE.txt" />
+    <None Remove="wwwroot\assets\libs\treeview\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,8 +79,6 @@
     <None Include="wwwroot\assets\libs\gulp-rtlcss\node_modules\rtlcss\lib\util.js" />
     <None Include="wwwroot\assets\libs\gulp-rtlcss\node_modules\strip-json-comments\index.js" />
     <None Include="wwwroot\assets\libs\gulp-rtlcss\node_modules\strip-json-comments\license" />
-    <None Include="wwwroot\assets\libs\treeview\node_modules\jquery\external\sizzle\sizzle.min.js" />
-    <None Include="wwwroot\assets\libs\treeview\node_modules\jquery\jquery.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -117,10 +113,6 @@
     <Folder Include="wwwroot\assets\libs\raphael\dev\test\" />
     <Folder Include="wwwroot\assets\libs\selectize\less\plugins\" />
     <Folder Include="wwwroot\assets\libs\toastr\tests\" />
-    <Folder Include="wwwroot\assets\libs\treeview\demo\" />
-    <Folder Include="wwwroot\assets\libs\treeview\node_modules\jquery\dist\" />
-    <Folder Include="wwwroot\assets\libs\treeview\node_modules\jquery\external\sizzle\dist\" />
-    <Folder Include="wwwroot\assets\libs\treeview\node_modules\jquery\src\" />
     <Folder Include="wwwroot\assets\libs\twitter-bootstrap-wizard\examples\" />
     <Folder Include="wwwroot\assets\libs\waypoints\src\" />
     <Folder Include="wwwroot\assets\libs\waypoints\test\" />
