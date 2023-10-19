@@ -5,63 +5,30 @@
     ViewData["Title"] = "Home";
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <title>Adminto - Responsive Bootstrap 4 Landing Page Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-@*    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
-    <!-- bs css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <title>Landing Page with Content Box</title>
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" type="text/css">
+
+    <!--Material Icon -->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/materialdesignicons.min.css" />
+
+    <!--pe-7 Icon -->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/pe-icon-7-stroke.css" />
+
+    <!-- Custom  sCss -->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css" />
+
+
     <style>
-        /* Global Styles */
-
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        /* Container for the Content Box */
-        .containerLogin {
-            display: flex !important;
-            justify-content: start !important;
-            align-items: center !important;
-            height: 100vh !important;
-            /*            width: 100vh;*/
-        }
-
-        /* Content Box on the Left */
-        .content-box {
-            padding: 20px;
-            background-color: #fff;
-            border: 2px solid #333;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 3rem;
-        }
-
-        .bg-image {
-            background-image: url(/img/bugburnersmall.jpg) !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            position: relative !important;
-        }
-
-        .bg-filter {
-            background: linear-gradient( to right, rgba(0,0, 0, 8), rgba(0, 0, 0, 0) ) !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            position: relative !important;
-        }
-
         .transparent-white-background {
             background-color: rgba(255, 255, 255, 0.5); /* 0.7 is the alpha value for 70% opacity */
             border-radius: .1rem;
@@ -71,39 +38,416 @@
             padding-bottom: 2rem;
             position: relative;
         }
-
-
-        /* Apply the animation to the div */
-
-
     </style>
 </head>
-<body class="bg-image">
-        <div class=" containerLogin bg-filter ">
-            <div class="content-box transparent-white-background div-with-glow ">
-                @if (SignInManager.IsSignedIn(User))
-                {
 
-                    <h1 class="text-center">Welcome Back! @User.Identity?.Name! </h1>
-                    <a class="btn btn-primary mt-3" asp-action="Dashboard" asp-controller="Home">
-                        Start!
-                    </a>
-                }
-                else
-                {
-                    <h1>Welcome to BugBurner</h1>
-                    <p>The all in one project manager.</p>
-                    <a class="btn btn-lg btn-secondary mt-3" asp-area="Identity" asp-page="/Account/Login">
-                        Try it out!
-                    </a>
-                }
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="58" class="scrollspy-example">
+
+    <!--Navbar Start-->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky sticky-dark" id="nav-sticky">
+        <div class="container-fluid">
+            <!-- LOGO -->
+            <a class="logo text-uppercase" href="index.html">
+                <img src="images/logo-light.png" alt="" class="logo-light" height="18" />
+                <img src="images/logo-dark.png" alt="" class="logo-dark" height="18" />
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="mdi mdi-menu"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ms-auto" id="mySidenav">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#features" class="nav-link">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#demo" class="nav-link">Demos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    <!-- bs js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-            crossorigin="anonymous"></script>
-</body>
+    </nav>
+    <!-- Navbar End -->
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <section class="bg-home bg-gradient" id="home">
+            <div class="home-center">
+                <div class="home-desc-center">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="home-title">
+                                    <h5 class="mb-3 text-white-50">Discover BugBurner Today</h5>
+                                    <h2 class="mb-4 text-white">Welcome Back! @User.Identity!.Name</h2>
+                                    <div class="watch-video mt-3">
+                                        <a asp-action="Dashboard" asp-controller="Home" class="btn btn-custom me-4">Start!</a>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <div class="col-lg-5 offset-lg-1 col-sm-6">
+                                <div class="home-img mo-mt-20">
+                                    <img src="~/img/Bug Burner Blue.png" alt="" class="img-fluid mx-auto d-block">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </div>
+                    <!-- end container-fluid -->
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <!-- home start -->
+        <section class="bg-home bg-gradient" id="home">
+            <div class="home-center">
+                <div class="home-desc-center">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="home-title">
+                                    <h5 class="mb-3 text-white-50">Discover BugBurner Today</h5>
+                                    <h2 class="mb-4 text-white">Make managing your Team Easy with BugBurner</h2>
+                                    <p class="text-white-50 home-desc font-16 mb-5">BugBurner is a a comprehensive task management platform that allows your team to manage a tackle tasks in an efficient and orderly manner.</p>
+                                    <div class="watch-video mt-5">
+                                        <a href="#demo" class="btn btn-custom me-4">Try it out</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-5 offset-lg-1 col-sm-6">
+                                <div class="home-img mo-mt-20">
+                                    <img src="~/img/Bug Burner Blue.png" alt="" class="img-fluid mx-auto d-block">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </div>
+                    <!-- end container-fluid -->
+                </div>
+            </div>
+        </section>
+        <!-- home end -->
+    }
+    <!-- features start -->
+    <section class="features" id="features">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="nav nav-pills nav-justified features-tab mb-5" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-code-tab" data-bs-toggle="pill" href="#pills-code" role="tab" aria-controls="pills-Code" aria-selected="true">
+                                <div class="clearfix">
+                                    <div class="features-icon float-end">
+                                        <h1><i class="pe-7s-notebook tab-icon"></i></h1>
+                                    </div>
+                                    <div class="d-none d-lg-block me-4">
+                                        <h5 class="tab-title">Quality Code</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pills-customize-tab" data-bs-toggle="pill" href="#pills-customize" role="tab" aria-controls="pills-statistics" aria-selected="false">
+                                <div class="clearfix">
+                                    <div class="features-icon float-end">
+                                        <h1><i class="pe-7s-edit tab-icon"></i></h1>
+                                    </div>
+                                    <div class="d-none d-lg-block me-4">
+                                        <h5 class="tab-title">Insightful Statistics</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mb-4" id="pills-support-tab" data-bs-toggle="pill" href="#pills-support" role="tab" aria-controls="pills-roles" aria-selected="false">
+                                <div class="features-icon float-end">
+                                    <h1><i class="pe-7s-id tab-icon"></i></h1>
+                                </div>
+                                <div class="d-none d-lg-block me-4">
+                                    <h5 class="tab-title">Role Based Design</h5>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade" id="pills-code" role="tabpanel" aria-labelledby="pills-code-tab">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-lg-4 col-sm-6">
+                                    <div>
+                                        <img src="~/img/qualityCode.jpg" alt="" class="img-fluid mx-auto d-block">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 offset-lg-1">
+                                    <div>
+                                        <div class="feature-icon mb-4">
+                                            <h1><i class="pe-7s-notebook text-primary"></i></h1>
+                                        </div>
+                                        <h5 class="mb-3">Quality Code</h5>
+                                        <p class="text-muted">
+                                            My custom bug tracker adheres to the SOLID principles, promoting maintainability and extensibility. It was built using a code-first approach, Scaffolded models, and Entity Framework. This means that the data model and database schema were defined in code, allowing for full control and easy integration of software engineering principles. Scaffolded models and Entity Framework streamlined development, while adhering to SOLID principles ensures a well-structured, scalable, and adaptable bug tracker, which can evolve with the project's needs.
+                                        </p>
+                                        <div class="row pt-4">
+                                            <h6 class="tab-title">
+                                                Technologies Used:
+                                            </h6>
+                                            <div class="col-lg-6">
+                                                <div class="text-muted">
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> C#</p>
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> PostGresSQL</p>
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> .NET Core</p>
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> Javascript</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="text-muted">
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> CSS</p>
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> Bootstrap</p>
+                                                    <p><i class="mdi mdi-checkbox-marked-outline text-primary me-2 h6"></i> HTML</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <a href="#demo" class="btn btn-custom">Learn More <i class="mdi mdi-arrow-right ms-1"></i></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- end row -->
+                        </div>
+                        <div class="tab-pane fades how active" id="pills-customize" role="tabpanel" aria-labelledby="pills-customize-tab">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-lg-4 col-sm-6">
+                                    <div>
+                                        <img src="~/img/DashScreenshot.png" alt="" class="img-fluid mx-auto d-block">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 offset-lg-1">
+                                    <div>
+                                        <div class="feature-icon mb-4">
+                                            <h1><i class="pe-7s-edit text-primary"></i></h1>
+                                        </div>
+                                        <h5 class="mb-3">Easy to manage</h5>
+                                        <p class="text-muted">My Bug Tracker UI has been thoughtfully designed to provide a user-friendly experience, making it easy for individuals to navigate and interact with the system efficiently. It offers a clean and intuitive interface, simplifying the process of logging and tracking bugs, while also providing comprehensive visualization tools and analytics that enable users to gain deeper insights into a company's data. Through this UI, stakeholders can access detailed reports, graphs, and charts that offer a holistic view of the bug tracking data, aiding in decision-making, prioritization, and performance assessment. This combination of user-friendliness and data insights empowers companies to better understand their software development processes and enhance their overall quality and efficiency.</p>
+                                        <div class="row pt-4">                                            
+                                        </div>
+                                        <div class="mt-4">
+                                            <a href="#demo" class="btn btn-custom">Try out! <i class="mdi mdi-arrow-right ms-1"></i></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                        <div class="tab-pane fade" id="pills-support" role="tabpanel" aria-labelledby="pills-support-tab">
+
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-lg-4 col-sm-6">
+                                    <div>
+                                        <img src="~/img/SercureBugburner.jpg" alt="" class="img-fluid mx-auto d-block">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 offset-lg-1">
+                                    <div>
+                                        <div class="feature-icon mb-4">
+                                            <i class="pe-7s-id h1 text-primary"></i>
+                                        </div>
+                                        <h5 class="mb-3">Secure Role Based System</h5>
+                                        <p class="text-muted">
+                                            My invite-only identity role-based bug tracker offers a robust and secure system by tightly controlling access and functionality based on user roles. The invite-only approach ensures that only authorized individuals have access, enhancing system security. User roles, on the other hand, allow for fine-grained permissions, ensuring that each user can only perform actions aligned with their role, such as developers resolving bugs or managers overseeing the entire process. This granular control not only safeguards sensitive data but also streamlines workflow, making the system efficient and tailored to the specific needs of different users, ultimately contributing to a highly secure and well-organized bug tracking environment.
+                                        </p>                                          
+                                        <div class="mt-4">
+                                            <a href="#demo" class="btn btn-custom">Try it out! <i class="mdi mdi-arrow-right ms-1"></i></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                    <!-- end tab-content -->
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </section>
+    <!-- features end -->
+    <!-- Demo start -->
+    <section class="section bg-gradient" id="demo">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="title text-center">
+                        <h6 class="text-light small-title">Demos</h6>
+                        <h4 class="text-light">Available Demos</h4>
+                        <p class="text-muted">Below are the Demos meant to simulate the functionality of each role in my Bug Tracker</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-4 col-sm-6">
+                    <div class=" text-center p-3 mt-4 transparent-white-background">
+                        <a  class="text-dark">
+                            <div class="mt-3">
+                                <h5 class="font-18">Admin</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="demo-box text-center p-3 mt-4 transparent-white-background">
+                        <a class="text-dark">
+                            <div class="mt-3">
+                                <h5 class="font-18">Project Manager</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="demo-box text-center p-3 mt-4 transparent-white-background">
+                        <a  class="text-dark">                            
+                            <div class="mt-3">
+                                <h5 class="font-18">Developer</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="demo-box text-center p-3 mt-4 transparent-white-background">
+                        <a  class="text-dark">
+                            <div class="mt-3">
+                                <h5 class="font-18">Submitter</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center mt-4">
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-custom">Try It! <i class="mdi mdi-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end container-fluid -->
+    </section>
+    <!-- Demo end -->
+    <!-- contact start -->
+    <section class="section" id="contact">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="title text-center mb-5">
+                        <h6 class="text-primary small-title">Contact</h6>
+                        <h4>Have any Questions ?</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-6">
+                    <div class="get-in-touch">
+                        <h5>Get in touch</h5>
+                        <p class="text-muted mb-5">Below are the best ways to reach me</p>
+
+                        <div class="mb-3">
+                            <div class="get-touch-icon float-start me-3">
+                                <h2><i class="pe-7s-mail text-primary"></i></h2>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h5 class="font-16 mb-0">E-mail</h5>
+                                <p class="text-muted">jonachav6414@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="get-touch-icon float-start me-3">
+                                <h2><i class="pe-7s-phone text-primary"></i></h2>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h5 class="font-16 mb-0">Phone</h5>
+                                <p class="text-muted">(336)-749-8498</p>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="get-touch-icon float-start me-3">
+                                <h2> <i class="pe-7s-map-marker text-primary"></i></h2>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h5 class="font-16 mb-0">LinkedIn</h5>
+                                <a href="https://www.linkedin.com/in/jonathan-gomez-chavez-0763811b2/" class="text-muted">Jonathan Gomez-Chavez</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </section>
+    <!-- contact end -->
+    <!-- footer start -->
+    <footer class="footer bg-dark">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="text-center">
+                        <div class="footer-logo mb-3">
+                            <img src="images/logo-light.png" alt="" height="20">
+                        </div>
+                        <ul class="list-inline footer-list text-center mt-5">
+                            <li class="list-inline-item"><a href="#">Home</a></li>
+                            <li class="list-inline-item"><a href="#">About</a></li>
+                            <li class="list-inline-item"><a href="#">Services</a></li>
+                            <li class="list-inline-item"><a href="#">Clients</a></li>
+                            <li class="list-inline-item"><a href="#">Pricing</a></li>
+                            <li class="list-inline-item"><a href="#">Contact</a></li>
+                        </ul>
+                        <ul class="list-inline social-links mb-4 mt-5">
+                            <li class="list-inline-item"><a href="#"><i class="mdi mdi-facebook"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="mdi mdi-twitter"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="mdi mdi-instagram"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="mdi mdi-google-plus"></i></a></li>
+                        </ul>
+                        <p class="text-white-50 mb-4">2016 - 2020 © Adminto. Design by <a href="#" target="_blank" class="text-white-50">Coderthemes</a> </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </footer>
+    <!-- footer end -->
+    <!-- Back to top -->
+    <a href="#" class="back-to-top" id="back-to-top"> <i class="mdi mdi-chevron-up"> </i> </a>
+
+    <!-- javascript -->
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <!-- counter js -->
+    <script src="~/assets/js/counter.int.js"></script>
+    <!-- custom js -->
+    <script src="~/assets/js/app2.js"></script>
+
+
+</body>
 
 </html>

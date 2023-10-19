@@ -1,0 +1,109 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<BTUser> SignInManager
+@inject UserManager<BTUser> UserManager
+@{
+    ViewData["Title"] = "Home";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@*    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+    <!-- bs css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Landing Page with Content Box</title>
+    <style>
+        /* Global Styles */
+
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* Container for the Content Box */
+        .containerLogin {
+            display: flex !important;
+            justify-content: start !important;
+            align-items: center !important;
+            height: 100vh !important;
+            /*            width: 100vh;*/
+        }
+
+        /* Content Box on the Left */
+        .content-box {
+            padding: 20px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left: 3rem;
+        }
+
+        .bg-image {
+            background-image: url(/img/bugburnersmall.jpg) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            position: relative !important;
+        }
+
+        .bg-filter {
+            background: linear-gradient( to right, rgba(0,0, 0, 8), rgba(0, 0, 0, 0) ) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            position: relative !important;
+        }
+
+        .transparent-white-background {
+            background-color: rgba(255, 255, 255, 0.5); /* 0.7 is the alpha value for 70% opacity */
+            border-radius: .1rem;
+            border-style: solid;
+            border-width: 2px;
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+            position: relative;
+        }
+
+
+        /* Apply the animation to the div */
+
+
+    </style>
+</head>
+<body class="bg-image">
+        <div class=" containerLogin bg-filter ">
+            <div class="content-box transparent-white-background div-with-glow ">
+                @if (SignInManager.IsSignedIn(User))
+                {
+
+                    <h1 class="text-center">Welcome Back! @User.Identity?.Name! </h1>
+                    <a class="btn btn-primary mt-3" asp-action="Dashboard" asp-controller="Home">
+                        Start!
+                    </a>
+                }
+                else
+                {
+                    <h1>Welcome to BugBurner</h1>
+                    <p>The all in one project manager.</p>
+                    <a class="btn btn-lg btn-secondary mt-3" asp-area="Identity" asp-page="/Account/Login">
+                        Try it out!
+                    </a>
+                }
+            </div>
+        </div>
+    <!-- bs js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+</body>
+
+
+</html>
