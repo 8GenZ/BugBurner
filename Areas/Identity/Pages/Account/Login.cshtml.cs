@@ -116,7 +116,7 @@ namespace BugBurner.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Demo User logged in.");
-                    return RedirectToAction(returnUrl);
+                    return LocalRedirect(returnUrl);
                 }
                 else
                 {
