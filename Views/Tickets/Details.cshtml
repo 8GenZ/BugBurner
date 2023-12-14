@@ -7,7 +7,7 @@
     BTUser? bTUser = await _UserManager.GetUserAsync(User);
     BTUser? Pm = await _ProjectService.GetProjectManagerAsync(Model.Project!.Id);
     bool userIsDeveloper;
-    if (bTUser!.Id == Model.DeveloperUserId)
+    if (bTUser?.Id == Model?.DeveloperUserId)
     {
         userIsDeveloper = true;
     }
@@ -16,7 +16,7 @@
         userIsDeveloper = false;
     }
     bool userIsPm;
-    if (bTUser.Id == Pm.Id)
+    if (bTUser?.Id == Pm?.Id)
     {
         userIsPm = true;
     }
@@ -32,29 +32,29 @@
             <div class="bg-picture card-body">
                 <div class="d-flex align-items-top">
                     <div class="flex-grow-1 overflow-hidden">
-                        <h4 class="m-0">@Model.Title</h4>
-                        <p class="text-muted"><i>@Model.TicketPriority!.Name</i></p>
+                        <h4 class="m-0">@Model?.Title</h4>
+                        <p class="text-muted"><i>@Model?.TicketPriority!.Name</i></p>
                         @if (User.IsInRole("Admin") || userIsPm == true || userIsDeveloper == true)
                         {
-                            <a class="btn btn-sm btn-outline-blue mb-2" asp-action="Edit" asp-controller="Tickets" asp-route-id="@Model.Id">Edit Ticket</a>
+                            <a class="btn btn-sm btn-outline-blue mb-2" asp-action="Edit" asp-controller="Tickets" asp-route-id="@Model?.Id">Edit Ticket</a>
                         }
 
 
-                        @if (Model.DeveloperUser == null)
+                        @if (Model?.DeveloperUserId == null)
                         {
                             <p class="text-muted"><i>unnasigned</i></p>
                         }
                         else
                         {
-                            <p class="text-muted"><i>@Model.DeveloperUser!.FullName</i></p>
+                            <p class="text-muted"><i>@Model?.DeveloperUser?.FullName</i></p>
                         }
-                        <p class="font-13">@Model.Description</p>
+                        <p class="font-13">@Model?.Description</p>
                         @if (User.IsInRole("Admin") || userIsPm == true || userIsDeveloper == true)
                         {
-                            <a class="btn btn-sm btn-outline-blue" asp-action="ArchiveTicket" asp-controller="Tickets" asp-route-id="@Model.Id">Mark Complete</a>
+                            <a class="btn btn-sm btn-outline-blue" asp-action="ArchiveTicket" asp-controller="Tickets" asp-route-id="@Model?.Id">Mark Complete</a>
 
                             <br />
-                            @if (Model.Archived == true && Model.ArchivedByProject == false)
+                            @if (Model?.Archived == true && Model?.ArchivedByProject == false)
                             {
                                 <a class="btn btn-sm btn-outline-blue" asp-action="UndoTicket" asp-controller="Tickets" asp-route-id="@Model.Id">Undo Archive</a>
                             }
@@ -99,11 +99,11 @@
 
         <div class="card">
             <div class="card-body">
-                @foreach (TicketComment comment in Model.Comments)
+                @foreach (TicketComment comment in Model?.Comments!)
                 {
                     <div class="d-flex align-items-top mb-2">
                         <div class="flex-grow-1">
-                            <h5 class="mt-0">By:@comment.User!.FullName <small class="ms-1 text-muted">@comment.Created</small></h5>
+                            <h5 class="mt-0">By:@comment.User?.FullName <small class="ms-1 text-muted">@comment.Created</small></h5>
                             <p>@comment.Comment</p>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                         </form>
                     </div>
                     <ul class="list-group mb-0 user-list">
-                        @foreach (TicketAttachment attachment in Model.Attachments)
+                        @foreach (TicketAttachment attachment in Model?.Attachments!)
                         {
                             <li class="list-group-item">
                                 <a asp-action="ShowFile" asp-controller="Tickets" asp-route-Id="@attachment.Id" class="user-list-item">
@@ -176,14 +176,14 @@
                 <h4 class="header-title mt-0 mb-3">Ticket History</h4>
 
                 <ul class="list-group mb-0 user-list">
-                    @foreach (TicketHistory history in Model.History)
+                    @foreach (TicketHistory history in Model?.History!)
                     {
                         <li class="list-group-item">
                             <div class="">
 
                                 <span class="date" style="font-weight:bold">@history.Created.ToString("dd MMM yyyy")</span>
                                 <h6>@history.Description</h6>
-                                <span>By: <a href="" title="@history.User!.FullName">@history.User.FullName</a></span>
+                                <span>By: <a href="" title="@history.User?.FullName">@history.User?.FullName</a></span>
                                 <div class="">
                                     @if (history.Description!.Contains("New Ticket Created"))
                                     {
